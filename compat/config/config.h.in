@@ -1,0 +1,102 @@
+#if !defined(H_CONFIG)
+#define H_CONFIG
+
+#include <stdarg.h> /* va_list for __vsnprintf_internal */
+#include <stdint.h> /* uint8_t for argp-help.c */
+#include <stdlib.h> /* alloca() for getopt.c */
+
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+
+/* C++ needs to know that types and declarations are C, not C++.
+ * glibc/misc/sys/cdefs.h
+ */
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS	extern "C" {
+# define __END_DECLS	}
+#else
+# define __BEGIN_DECLS
+# define __END_DECLS
+#endif
+
+#mesondefine HAVE_CONFIG_H
+#mesondefine HAVE_UNISTD_H
+#mesondefine HAVE_ALLOCA_H
+#mesondefine HAVE_LIBINTL_H
+
+#mesondefine HAVE_ASPRINTF
+#mesondefine HAVE_MEMPCPY
+#mesondefine HAVE_STRCASECMP
+#mesondefine HAVE_STRCHRNUL
+#mesondefine HAVE_STRNDUP
+
+#mesondefine HAVE_DECL_PROGRAM_INVOCATION_NAME
+#mesondefine HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+
+#mesondefine HAVE_DECL_FWRITE_UNLOCKED
+#mesondefine HAVE_DECL_CLEARERR_UNLOCKED
+#mesondefine HAVE_DECL_FEOF_UNLOCKED
+#mesondefine HAVE_DECL_FERROR_UNLOCKED
+#mesondefine HAVE_DECL_FFLUSH_UNLOCKED
+#mesondefine HAVE_DECL_FGETS_UNLOCKED
+#mesondefine HAVE_DECL_FPUTC_UNLOCKED
+#mesondefine HAVE_DECL_FPUTS_UNLOCKED
+#mesondefine HAVE_DECL_FLOCKFILE
+#mesondefine HAVE_DECL_PUTC_UNLOCKED
+
+
+/* From uClibc/include/features.h */
+/* Convenience macros to test the versions of glibc and gcc.
+   Use them like this:
+   #if __GNUC_PREREQ (2,8)
+   ... code requiring gcc 2.8 or later ...
+   #endif
+   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
+   were not defined then.  */
+#if defined __GNUC__ && defined __GNUC_MINOR__
+# define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#else
+# define __GNUC_PREREQ(maj, min) 0
+#endif
+
+/* From uClibc/include/sys/cdefs.h */
+/* Forces a function to be always inlined.
+ */
+#if __GNUC_PREREQ (3,2)
+# define __always_inline __inline __attribute__ ((__always_inline__))
+#else
+# define __always_inline __inline
+#endif
+
+/*
+ * https://stackoverflow.com/questions/9358284/duplicate-symbol-caused-by-inline-extern
+ * https://stackoverflow.com/questions/216510/what-does-extern-inline-do
+ * From uClibc/include/sys/cdefs.h
+ */
+/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
+   inline semantics, unless -fgnu89-inline is used.
+   For -std=gnu99, forcing gnu_inline attribute does not change behavior,
+   but may silence spurious warnings (such as in GCC 4.2).  */
+#if !defined __cplusplus || __GNUC_PREREQ (4,3)
+# if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__ || defined __cplusplus
+#  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
+#  if __GNUC_PREREQ (4,3)
+#   define __extern_always_inline \
+  extern __always_inline __attribute__ ((__gnu_inline__, __artificial__))
+#  else
+#   define __extern_always_inline \
+  extern __always_inline __attribute__ ((__gnu_inline__))
+#  endif
+# else
+#  define __extern_inline extern __inline
+#  define __extern_always_inline extern __always_inline
+# endif
+#endif
+
+int __vsnprintf_internal (char *, size_t, const char*, va_list, unsigned int);
+#endif
