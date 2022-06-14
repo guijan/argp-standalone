@@ -1,5 +1,5 @@
-/* Default definition for ARGP_PROGRAM_VERSION.
-   Copyright (C) 1996-2021 Free Software Foundation, Inc.
+/* Default definition for ARGP_ERR_EXIT_STATUS
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -17,8 +17,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* If set by the user program to a non-zero value, then a default option
-   --version is added (unless the ARGP_NO_HELP flag is used), which will
-   print this this string followed by a newline and exit (unless the
-   ARGP_NO_EXIT flag is used).  Overridden by ARGP_PROGRAM_VERSION_HOOK.  */
-const char* argp_program_version;
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#include <sysexits.h>
+
+#include "argp.h"
+
+/* The exit status that argp will use when exiting due to a parsing error.
+   If not defined or set by the user program, this defaults to EX_USAGE from
+   <sysexits.h>.  */
+error_t argp_err_exit_status = EX_USAGE;
