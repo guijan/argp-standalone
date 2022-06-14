@@ -1,5 +1,5 @@
 /* Name frobnication for compiling argp outside of glibc
-   Copyright (C) 1997-2021 Free Software Foundation, Inc.
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if 1
+#if !_LIBC
 /* This code is written for inclusion in gnu-libc, and uses names in the
    namespace reserved for libc.  If we're not compiling in libc, define those
    names to be the normal ones instead.  */
@@ -76,6 +76,11 @@
 #undef __argp_fmtstream_wmargin
 #define __argp_fmtstream_wmargin argp_fmtstream_wmargin
 
+#include "mempcpy.h"
+#include "strcase.h"
+#include "strchrnul.h"
+#include "strndup.h"
+
 /* normal libc functions we call */
 #undef __flockfile
 #define __flockfile flockfile
@@ -95,60 +100,55 @@
 #define __strndup strndup
 
 #if defined(HAVE_DECL_CLEARERR_UNLOCKED) && !HAVE_DECL_CLEARERR_UNLOCKED
-#define clearerr_unlocked(x) clearerr(x)
+# define clearerr_unlocked(x) clearerr (x)
 #endif
 #if defined(HAVE_DECL_FEOF_UNLOCKED) && !HAVE_DECL_FEOF_UNLOCKED
-#define feof_unlocked(x) feof(x)
-#endif
+# define feof_unlocked(x) feof (x)
+# endif
 #if defined(HAVE_DECL_FERROR_UNLOCKED) && !HAVE_DECL_FERROR_UNLOCKED
-#define ferror_unlocked(x) ferror(x)
-#endif
+# define ferror_unlocked(x) ferror (x)
+# endif
 #if defined(HAVE_DECL_FFLUSH_UNLOCKED) && !HAVE_DECL_FFLUSH_UNLOCKED
-#define fflush_unlocked(x) fflush(x)
-#endif
+# define fflush_unlocked(x) fflush (x)
+# endif
 #if defined(HAVE_DECL_FGETS_UNLOCKED) && !HAVE_DECL_FGETS_UNLOCKED
-#define fgets_unlocked(x, y, z) fgets(x, y, z)
-#endif
+# define fgets_unlocked(x,y,z) fgets (x,y,z)
+# endif
 #if defined(HAVE_DECL_FPUTC_UNLOCKED) && !HAVE_DECL_FPUTC_UNLOCKED
-#define fputc_unlocked(x, y) fputc(x, y)
-#endif
+# define fputc_unlocked(x,y) fputc (x,y)
+# endif
 #if defined(HAVE_DECL_FPUTS_UNLOCKED) && !HAVE_DECL_FPUTS_UNLOCKED
-#define fputs_unlocked(x, y) fputs(x, y)
-#endif
+# define fputs_unlocked(x,y) fputs (x,y)
+# endif
 #if defined(HAVE_DECL_FREAD_UNLOCKED) && !HAVE_DECL_FREAD_UNLOCKED
-#define fread_unlocked(w, x, y, z) fread(w, x, y, z)
-#endif
+# define fread_unlocked(w,x,y,z) fread (w,x,y,z)
+# endif
 #if defined(HAVE_DECL_FWRITE_UNLOCKED) && !HAVE_DECL_FWRITE_UNLOCKED
-#define fwrite_unlocked(w, x, y, z) fwrite(w, x, y, z)
-#endif
+# define fwrite_unlocked(w,x,y,z) fwrite (w,x,y,z)
+# endif
 #if defined(HAVE_DECL_GETC_UNLOCKED) && !HAVE_DECL_GETC_UNLOCKED
-#define getc_unlocked(x) getc(x)
-#endif
+# define getc_unlocked(x) getc (x)
+# endif
 #if defined(HAVE_DECL_GETCHAR_UNLOCKED) && !HAVE_DECL_GETCHAR_UNLOCKED
-#define getchar_unlocked() getchar()
-#endif
+#  define getchar_unlocked() getchar ()
+# endif
 #if defined(HAVE_DECL_PUTC_UNLOCKED) && !HAVE_DECL_PUTC_UNLOCKED
-#define putc_unlocked(x, y) putc(x, y)
-#endif
+# define putc_unlocked(x,y) putc (x,y)
+# endif
 #if defined(HAVE_DECL_PUTCHAR_UNLOCKED) && !HAVE_DECL_PUTCHAR_UNLOCKED
-#define putchar_unlocked(x) putchar(x)
-#endif
+# define putchar_unlocked(x) putchar (x)
+# endif
 
-#if defined(HAVE_STRCHRNUL) && !HAVE_STRCHRNUL
-char*
-strchrnul(const char* s, int c);
-#endif
-
-#if defined(HAVE_MEMPCPY) && !HAVE_MEMPCPY
-void*
-mempcpy(void* to, const void* from, size_t size);
-#endif
-
-extern char*
-__argp_basename(char* name);
+extern char *__argp_basename (char *name);
 
 #endif /* !_LIBC */
 
 #ifndef __set_errno
 #define __set_errno(e) (errno = (e))
+#endif
+
+#if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+# define __argp_short_program_name()	(program_invocation_short_name)
+#else
+extern char *__argp_short_program_name (void);
 #endif

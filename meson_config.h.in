@@ -1,3 +1,8 @@
+#if !defined(H_CONFIG)
+#define H_CONFIG
+
+#include <stdint.h>
+
 /* Enable GNU extensions on systems that have them.  */
 #ifndef _GNU_SOURCE
 # undef _GNU_SOURCE
@@ -9,9 +14,6 @@
 #mesondefine HAVE_LIBINTL_H
 
 #mesondefine HAVE_ASPRINTF
-#mesondefine HAVE_STRCHRNUL
-#mesondefine HAVE_STRNDUP
-#mesondefine HAVE_MEMPCPY
 
 #mesondefine HAVE_DECL_PROGRAM_INVOCATION_NAME
 #mesondefine HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
@@ -35,4 +37,17 @@
 # define NORETURN
 # define PRINTF_STYLE(f, a)
 # define UNUSED
+#endif
+
+/* Look for "Flags for __v*printf_internal" in glibc's libio/libioP.h to find a
+ * comment that explains what the extra __vsnprintf_internal parameter does.
+ * The actual implementation ultimately leads to glibc's
+ * stdio-common/vfprintf-internal.c so read that for more in-depth information.
+ * The TL;DR is that we can ignore mode_flags and use the standard vsnprintf.
+ *
+ * This should probably be in argp-namefrob.h upstream.
+ */
+#define __vsnprintf_internal(str, size, fmt, ap, mode_flags) \
+	vsnprintf(str, size, fmt, ap)
+
 #endif
