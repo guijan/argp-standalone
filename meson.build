@@ -3,10 +3,15 @@ project('argp-standalone', 'c',
 
 cc = meson.get_compiler('c')
 src = []
+# Only the include directories used to compile the library go here.
 incdir = [include_directories('.')]
 
-subdir('src')
+# All the trickery to make argp compile unmodified goes here.
 subdir('compat')
+# Unmodified argp.h header from glibc/argp/argp.h
+subdir('include')
+# Unmodified argp sources from glibc/argp/argp-*.{c,h}
+subdir('src')
 
 conf_data = configuration_data()
 
@@ -72,7 +77,9 @@ else
 endif
 
 argp_dep = declare_dependency(link_with : argp_library,
-	                      include_directories : 'src')
+                              # Users only need our compatibility header and the
+                              # unmodified glibc header.
+	                      include_directories : ['compat/hdr', 'include'])
 
 if meson.version().version_compare('>= 0.54.0')
 	meson.override_dependency('argp-standalone', argp_dep)
