@@ -38,8 +38,11 @@
  * comment that explains what the extra __vsnprintf_internal parameter does.
  * The actual implementation ultimately leads to glibc's
  * stdio-common/vfprintf-internal.c so read that for more in-depth information.
+ * The TL;DR is that we can ignore mode_flags and use the standard vsnprintf.
+ *
+ * This should probably be in argp-namefrob.h upstream.
  */
-#define __vsnprintf_internal(str, size, fmt, ap, ignored_mode_flags) \
+#define __vsnprintf_internal(str, size, fmt, ap, mode_flags) \
 	vsnprintf(str, size, fmt, ap)
 
 #ifndef __THROW
