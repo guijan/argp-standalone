@@ -1,10 +1,11 @@
 incdir += include_directories('.')
+
 subdir('getopt')
 
-string_funcs = ['mempcpy', 'strcasecmp', 'strchrnul', 'strndup']
-
-foreach func : string_funcs
+foreach func : ['mempcpy', 'strcasecmp', 'strchrnul', 'strndup']
   if not cc.has_function(func, prefix : '#include <string.h>')
     src += files(func + '.c')
   endif
 endforeach
+
+install_headers('argp.h')

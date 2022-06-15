@@ -12,4 +12,6 @@ src += files([
 
 incdir += include_directories('.')
 
-install_headers('argp.h')
+# Install glibc's argp.h to <argp-standalone/argp.h> so we can put our own
+# argp.h between the user and the copypasted glibc header.
+install_headers('argp.h', subdir : 'argp-standalone')
