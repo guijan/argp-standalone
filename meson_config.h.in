@@ -14,6 +14,10 @@
 #mesondefine HAVE_LIBINTL_H
 
 #mesondefine HAVE_ASPRINTF
+#mesondefine HAVE_MEMPCPY
+#mesondefine HAVE_STRCASECMP
+#mesondefine HAVE_STRCHRNUL
+#mesondefine HAVE_STRNDUP
 
 #mesondefine HAVE_DECL_PROGRAM_INVOCATION_NAME
 #mesondefine HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME

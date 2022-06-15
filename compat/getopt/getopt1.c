@@ -41,7 +41,9 @@
 #if !defined _LIBC && defined __GLIBC__ && __GLIBC__ >= 2
 #include <gnu-versions.h>
 #if _GNU_GETOPT_INTERFACE_VERSION == GETOPT_INTERFACE_VERSION
+#if 0
 #define ELIDE_CODE
+#endif
 #endif
 #endif
 

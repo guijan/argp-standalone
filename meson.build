@@ -26,6 +26,17 @@ conf_data.set10('HAVE_ALLOCA_H', cc.check_header('alloca.h'))
 conf_data.set('HAVE_UNISTD_H', cc.check_header('unistd.h'))
 conf_data.set('HAVE_LIBINTL_H', cc.check_header('libintl.h'))
 
+conf_data.set10('HAVE_ASPRINTF',
+                cc.has_function('asprintf', prefix: '#include <stdio.h>'))
+conf_data.set10('HAVE_MEMPCPY',
+                cc.has_function('mempcpy', prefix: '#include <string.h>'))
+conf_data.set10('HAVE_STRCASECMP',
+                cc.has_function('strcasecmp', prefix: '#include <string.h>'))
+conf_data.set10('HAVE_STRCHRNUL',
+                cc.has_function('strchrnul', prefix: '#include <string.h>'))
+conf_data.set10('HAVE_STRNDUP',
+                cc.has_function('strndup', prefix: '#include <string.h>'))
+
 conf_data.set10('HAVE_DECL_FLOCKFILE', cc.has_function('flockfile'))
 conf_data.set10('HAVE_DECL_FPUTS_UNLOCKED',
                 cc.has_function('fputs_unlocked',
@@ -38,9 +49,6 @@ conf_data.set10('HAVE_DECL_FWRITE_UNLOCKED',
                                 prefix : '#include <stdio.h>'))
 conf_data.set10('HAVE_DECL_PUTC_UNLOCKED',
                 cc.has_function('putc_unlocked', prefix : '#include <stdio.h>'))
-
-conf_data.set10('HAVE_ASPRINTF',
-                cc.has_function('asprintf', prefix: '#include <stdio.h>'))
 
 conf_data.set10('HAVE_DECL_PROGRAM_INVOCATION_NAME',
                 cc.has_function('program_invocation_name',
