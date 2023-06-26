@@ -1,7 +1,10 @@
 project('argp-standalone', 'c',
 	version : '1.5.0',
 	license : 'LGPL-2.1-or-later',
+	default_options : ['c_std=c99'],
 )
+
+add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
 
 argp_source = files([
 	'argp-ba.c',
